@@ -1,0 +1,47 @@
+[
+  {
+    "num_qubits": 2,
+    "hilbert_dimension": 4,
+    "circuit_depth": 2,
+    "gate_count": 2,
+    "shots": 1024,
+    "execution_time_ms": 1.082,
+    "memory_usage_mb": 71.42
+  },
+  {
+    "num_qubits": 4,
+    "hilbert_dimension": 16,
+    "circuit_depth": 4,
+    "gate_count": 4,
+    "shots": 1024,
+    "execution_time_ms": 0.897,
+    "memory_usage_mb": 71.42
+  },
+  {
+    "num_qubits": 6,
+    "hilbert_dimension": 64,
+    "circuit_depth": 6,
+    "gate_count": 6,
+    "shots": 1024,
+    "execution_time_ms": 5.341,
+    "memory_usage_mb": 71.75
+  },
+  {
+    "num_qubits": 8,
+    "hilbert_dimension": 256,
+    "circuit_depth": 8,
+    "gate_count": 8,
+    "shots": 1024,
+    "execution_time_ms": 35.681,
+    "memory_usage_mb": 75.79
+  },
+  {
+    "num_qubits": 10,
+    "hilbert_dimension": 1024,
+    "circuit_depth": 10,
+    "gate_count": 10,
+    "shots": 1024,
+    "execution_time_ms": 481.816,
+    "memory_usage_mb": 140.83
+  }
+]

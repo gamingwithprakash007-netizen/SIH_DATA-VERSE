@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DATA VERSE - Quantum Digital Signature Security & Threat Detection</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">DV</div>
+      <div class="logo-text">
+        <h1>DATA VERSE</h1>
+        <span>Quantum Digital Signature Security Platform (SIH26141)</span>
+      </div>
+    </div>
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="tab-verify">Sign & Verify</button>
+      <button class="tab-btn" data-tab="tab-quantum">Virtual Quantum Computer</button>
+      <button class="tab-btn" data-tab="tab-attacks">Attack Laboratory</button>
+      <button class="tab-btn" data-tab="tab-history">Audit History</button>
+    </nav>
+  </header>
+
+  <!-- Research Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <div>
+      <strong>RESEARCH PROTOTYPE:</strong> Powered by DATA VERSE Virtual Quantum Computer (NumPy Backend). Cross-validated against Cirq/QSim. No physical hardware claimed.
+    </div>
+    <div>System Status: <code id="sys-status-badge">INITIALIZING</code></div>
+  </div>
+
+  <main>
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">Documents Verified</div>
+          <div class="stat-value" id="stat-total-verified">0</div>
+          <div class="stat-sub">Audited sessions in SQLite</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Safe Verifications</div>
+          <div class="stat-value" id="stat-safe" style="color: var(--safe);">0</div>
+          <div class="stat-sub">Threat Score &lt; 25.0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Suspicious Sessions</div>
+          <div class="stat-value" id="stat-suspicious" style="color: var(--suspicious);">0</div>
+          <div class="stat-sub">25.0 &le; Score &lt; 65.0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">Attacks Detected</div>
+          <div class="stat-value" id="stat-attack" style="color: var(--attack);">0</div>
+          <div class="stat-sub">Tamper / Forgery / Replay</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Quick Security Demonstration</div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+            DATA VERSE binds digital document fingerprints to entangled Bell states and evaluates telemetry via projective measurements. Experience the 4 demonstration scenarios:
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn" onclick="triggerAttack('NORMAL')">Run Legitimate Demo (SAFE)</button>
+            <button class="btn btn-danger" onclick="triggerAttack('DOCUMENT_TAMPERING')">Tampered Document</button>
+            <button class="btn btn-danger" onclick="triggerAttack('REPLAY_ATTACK')">Replay Attack</button>
+            <button class="btn btn-secondary" onclick="triggerAttack('QUANTUM_CHANNEL_NOISE')">Quantum Noise</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Virtual Quantum Engine Architecture</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.8rem;">
+            State Vector Evolution in &Copf;<sup>2<sup>n</sup></sup> with Born rule projective measurement sampling:
+          </p>
+          <pre>|ψ⟩ = α|0⟩ + β|1⟩  &rarr;  H|0⟩ = (|0⟩+|1⟩)/&radic;2  &rarr;  CNOT|00⟩ = (|00⟩+|11⟩)/&radic;2
+Teleportation: |ψ⟩ ⊗ |Φ+⟩ &rarr; Bell Measurement (m0, m1) &rarr; Pauli Correction (Z^m0 X^m1)</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: SIGN & VERIFY -->
+    <div id="tab-verify" class="tab-content">
+      <div class="grid-2">
+        <!-- Document & Signing Panel -->
+        <div class="card">
+          <div class="card-title">1. Document Fingerprint & Digital Signature</div>
+          <div class="form-group">
+            <label>Upload Document (PDF, TXT, DOCX)</label>
+            <input type="file" onchange="handleManualUpload(event)">
+            <small style="color: var(--text-muted); font-size: 0.75rem;">Default loaded: <code>Government_Digital_Guideline.pdf</code></small>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem;">
+            <div><strong>Document ID:</strong> <span id="doc-id-display" style="font-family: var(--font-mono);">-</span></div>
+            <div><strong>Filename:</strong> <span id="doc-filename-display">-</span></div>
+            <div style="word-break: break-all; margin-top: 4px;"><strong>SHA-256:</strong> <span id="doc-sha256-display" style="color: var(--primary); font-family: var(--font-mono);">-</span></div>
+            <div style="word-break: break-all; margin-top: 4px;"><strong>SHA3-256:</strong> <span id="doc-sha3-display" style="color: var(--secondary); font-family: var(--font-mono);">-</span></div>
+          </div>
+
+          <div id="upload-status" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.8rem;"></div>
+
+          <button class="btn" onclick="signCurrentDocument()">Generate Quantum Digital Signature (QDS)</button>
+          <div id="sign-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.6rem;"></div>
+
+          <div style="margin-top: 1rem; background: rgba(0,0,0,0.2); padding: 0.8rem; border-radius: 6px; font-size: 0.8rem;">
+            <div><strong>Session ID:</strong> <code id="sig-session-display">-</code></div>
+            <div><strong>Nonce:</strong> <code id="sig-nonce-display">-</code></div>
+            <div><strong>Digital Signature Status:</strong> <span id="sig-b64-display" style="color: var(--safe); font-weight: 600;">Not Signed</span></div>
+          </div>
+
+          <div style="margin-top: 0.8rem; display: flex; flex-direction: column; gap: 8px;">
+            <button id="btn-download-doc-pdf" class="btn" onclick="downloadCleanDocumentPdf()" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #10b981, #059669); color: #fff;">
+              Download Clean Document (PDF - No Signature Text)
+            </button>
+            <button id="btn-download-pkg" class="btn btn-secondary" onclick="downloadSignaturePackage()" style="width: 100%; justify-content: center;">
+              Download Detached Signature Package (.qds.json)
+            </button>
+            <button id="btn-verify" class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="verifyCurrentDocument()" disabled>
+              Quick Test: Verify In Memory
+            </button>
+            <div id="verify-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;"></div>
+          </div>
+
+          <!-- Independent Verifier Section (Single PDF Mode) -->
+          <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1.2rem;">
+            <h4 style="font-size: 0.95rem; margin-bottom: 0.4rem; color: #fff;">Independent Verifier Mode (Upload Signed PDF)</h4>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+              Upload the signed PDF document. The engine automatically extracts and verifies the embedded Quantum Digital Signature metadata without needing any separate JSON files:
+            </p>
+            <div class="form-group" style="margin-bottom: 0.8rem;">
+              <label>Upload Signed PDF File</label>
+              <input type="file" id="independent-doc-file" accept=".pdf">
+            </div>
+            <button class="btn" style="width: 100%; justify-content: center;" onclick="verifyIndependentFiles()">
+              Verify Signed PDF Document
+            </button>
+            <div id="independent-verify-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;"></div>
+          </div>
+        </div>
+
+        <!-- Verification Results Panel -->
+        <div class="card" id="verification-card-results" style="display: none;">
+          <div class="card-title">
+            <span>2. Verification Result & Forensic Analysis</span>
+            <span id="result-badge" class="badge badge-safe">SAFE</span>
+          </div>
+
+          <div class="threat-meter-container">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+              <span>Threat Score Meter</span>
+              <span>Thresholds: Safe &lt; 25.0 | Attack &ge; 65.0</span>
+            </div>
+            <div class="threat-meter-bar">
+              <div id="threat-meter-fill" class="threat-meter-fill"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Contributing Factors:</h4>
+            <table style="margin-bottom: 1rem;">
+              <tr><th>Layer</th><th>Status</th></tr>
+              <tr><td>Document Fingerprint Integrity</td><td id="factor-doc">-</td></tr>
+              <tr><td>ECDSA Asymmetric Signature</td><td id="factor-sig">-</td></tr>
+              <tr><td>Quantum Telemetry / Bell State</td><td id="factor-quantum">-</td></tr>
+              <tr><td>Session Window & Timestamp</td><td id="factor-session">-</td></tr>
+              <tr><td>Nonce Replay Detection</td><td id="factor-replay">-</td></tr>
+            </table>
+
+            <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Explainable Forensic Reasons:</h4>
+            <ul id="reasons-list" style="padding-left: 1.2rem; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 1rem;"></ul>
+
+            <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">Virtual Quantum Computer Telemetry:</h4>
+            <pre id="quantum-metrics-raw" style="font-size: 0.78rem;"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: QUANTUM COMPUTER -->
+    <div id="tab-quantum" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Bell State Generator & Correlation Engine</div>
+          <div class="form-group">
+            <label>Select Canonical Bell State</label>
+            <select id="bell-select">
+              <option value="phi_plus">|Φ+⟩ = (|00⟩ + |11⟩)/√2</option>
+              <option value="phi_minus">|Φ-⟩ = (|00⟩ - |11⟩)/√2</option>
+              <option value="psi_plus">|Ψ+⟩ = (|01⟩ + |10⟩)/√2</option>
+              <option value="psi_minus">|Ψ-⟩ = (|01⟩ - |10⟩)/√2</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Measurement Shots</label>
+            <input type="number" id="bell-shots" value="1024" min="100" max="10000">
+          </div>
+          <button class="btn" onclick="runBellState()">Simulate Bell State & Correlations</button>
+          <pre id="bell-output" style="margin-top: 1rem; font-size: 0.8rem;">Click button to simulate...</pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Quantum Teleportation & Pauli Correction</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+            Teleports arbitrary input state |+⟩ using a shared EPR pair |Φ+⟩, Bell-basis projection on (q0, q1), and classical Pauli reconstruction (Z^m0 X^m1) on q2.
+          </p>
+          <button class="btn" onclick="runTeleportation()">Execute Teleportation Circuit</button>
+          <pre id="teleport-output" style="margin-top: 1rem; font-size: 0.8rem;">Click button to execute teleportation...</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: ATTACK LABORATORY -->
+    <div id="tab-attacks" class="tab-content">
+      <div class="card">
+        <div class="card-title">Controlled Attack Simulation Laboratory</div>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Select a deterministic cyber attack scenario to evaluate detection resilience and explainable threat scoring:
+        </p>
+
+        <div class="attack-grid">
+          <div class="attack-btn" onclick="triggerAttack('NORMAL')">
+            <div class="attack-btn-title">0. Normal Verification</div>
+            <div class="attack-btn-desc">Legitimate document & valid signature package</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('DOCUMENT_TAMPERING')">
+            <div class="attack-btn-title">1. Document Tampering</div>
+            <div class="attack-btn-desc">Modifies 1 byte in document payload</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('SIGNATURE_TAMPERING')">
+            <div class="attack-btn-title">2. Signature Tampering</div>
+            <div class="attack-btn-desc">Corrupts cryptographic signature bytes</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('FORGERY_SIMULATION')">
+            <div class="attack-btn-title">3. Forgery Simulation</div>
+            <div class="attack-btn-desc">Signs with rogue unauthenticated keypair</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('REPLAY_ATTACK')">
+            <div class="attack-btn-title">4. Replay Attack</div>
+            <div class="attack-btn-desc">Reuses registered nonce and session ID</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('QUANTUM_CHANNEL_NOISE')">
+            <div class="attack-btn-title">5. Quantum Noise</div>
+            <div class="attack-btn-desc">Injects 35% depolarizing channel noise</div>
+          </div>
+          <div class="attack-btn" onclick="triggerAttack('MEASUREMENT_MANIPULATION')">
+            <div class="attack-btn-title">6. Measurement Manipulation</div>
+            <div class="attack-btn-desc">Biases readout statistics to test chi-square</div>
+          </div>
+        </div>
+
+        <div id="attack-status" style="font-size: 0.85rem; color: var(--primary); margin-bottom: 0.8rem;">Ready.</div>
+        <h4 style="font-size: 0.9rem; margin-bottom: 0.4rem;">Attack Laboratory Execution Telemetry:</h4>
+        <pre id="attack-diff-view" style="font-size: 0.8rem; max-height: 280px;">Select an attack above to inspect payload diff and verification result.</pre>
+      </div>
+    </div>
+
+    <!-- TAB 5: AUDIT HISTORY -->
+    <div id="tab-history" class="tab-content">
+      <div class="card">
+        <div class="card-title">
+          <span>Verification Audit Ledger (SQLite)</span>
+          <button class="btn btn-secondary" onclick="loadHistory()">Refresh</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Verification ID</th>
+              <th>Time</th>
+              <th>Threat Score</th>
+              <th>Classification</th>
+              <th>Attack Context</th>
+              <th>Forensic PDF</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No records found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

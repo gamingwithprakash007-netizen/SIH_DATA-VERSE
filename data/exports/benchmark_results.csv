@@ -1,0 +1,6 @@
+num_qubits,hilbert_dimension,circuit_depth,gate_count,shots,execution_time_ms,memory_usage_mb
+2,4,2,2,1024,1.082,71.42
+4,16,4,4,1024,0.897,71.42
+6,64,6,6,1024,5.341,71.75
+8,256,8,8,1024,35.681,75.79
+10,1024,10,10,1024,481.816,140.83
